@@ -26,12 +26,31 @@
       }
 
     /* THE GRID */
+    body {
+      display: grid;
+      grid-template-areas: "header header"
+                           "features triage";
+      grid-template-columns: 1575px 1fr;
+      grid-template-rows: auto auto;
+      height: 100vh;
+    }
+      header {
+        grid-area: header;
+      }
+      #features {
+        grid-area: features;
+      }
+      #triage {
+        grid-area: triage;
+      }
+
 
     /* FEATURE TABLE */
     table {
       text-align: center;
       vertical-align: middle;
       border-spacing: 10px;
+      width: 100%;
     }
 
     th, td {
@@ -50,6 +69,9 @@
     th:first-child, td {
       text-align: right;
     }
+    th:first-child {
+      padding-left: 0;
+    }
 
     /* - Table Body */
     tbody th {
@@ -59,14 +81,14 @@
       background: #333;
       border-radius: 5px;
     }
-      .up {
+      .good-direction {
         color: #00AA00;
       }
-      .down {
+      .bad-direction {
         color: #FF0000;
       }
     tbody svg, tbody object {
-      width: 5em;
+      width: 4em;
       height: 1em;
       margin-left: 0.5em;
     }
@@ -77,6 +99,29 @@
       .fail {
         fill: #666;
       }
+
+    /* Triage */
+    #triage {
+      margin-top: 10px;
+      margin-right: 10px;
+    }
+    #triage h2 {
+      color: #999;
+      font: 700 2em/1 'Open Sans Condensed', sans-serif;
+      padding: 0;
+      margin: 0;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    #triage p {
+      background: #333;
+      border-radius: 5px;
+      color: #FFF;
+      font: 700 2em/1 'Open Sans Condensed', sans-serif;
+      text-align: center;
+      padding: 0.75em 0;
+      margin: 10px 0;
+    }
   </style>
 </head>
 <body>
@@ -92,36 +137,17 @@
         <th>Chromium Bugs</th>
       </tr>
     </thead>
-<!--
-    <tbody>
-      <tr>
-        <th>Cookies</th>
-        <td>
-          <a href="https://wpt.fyi/cookies">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="chart" width="420" height="150" aria-labelledby="title" role="img">
-            <g class="bar">
-              <rect width="3.8em" height="1em" class="pass"></rect>
-              <rect width="1.2em" height="1em" class="fail" x="3.8em"></rect>
-            </g>
-          </svg>
-          </a>
-        <td>
-          <a href="https://github.com/w3c/webappsec-clear-site-data/issues/">14</a>
-          <object data="https://sparksvg.me/line.svg?6,4,2,7,8,10,14,14,16,9,7,3,3,6,4,2,7,8,10,14,24,16,9,7,3,7&current&rgba:255,255,255,1"
-                  type="image/svg+xml">
-          </object>
-        </td>
-        <td>
-          <a href="">2</a>
-          <object data="https://sparksvg.me/line.svg?6,4,2,7,8,10,14,14,16,9,7,3,3,6,4,2,7,8,10,14,24,16,9,7,3,7&current&rgba:255,255,255,1"
-                  type="image/svg+xml">
-          </object>
-        </td>
-      </tr>
-    </tbody>
--->
   </table>
   <section id="triage">
+    <div>
+      <h2>Bug Triage</h2>
+      <p>andypaicu@</p>
+    </div>
+
+    <div>
+      <h2>Intent Triage</h2>
+      <p>estark@</p>
+    </div>
   </section>
 
   <script>
@@ -192,14 +218,14 @@
               ${Math.floor(passPercent * 100)}%
               ${
                 Math.round(Math.random()) ?
-                    '<span class="up">&#x2197;</span>' :
-                    '<span class="down">&#x2198;</span>'
+                    '<span class="good-direction">&#x2197;</span>' :
+                    '<span class="bad-direction">&#x2198;</span>'
               }
             </a>
-            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="chart" width="420" height="150" aria-labelledby="title" role="img">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="chart" width="420" height="140" aria-labelledby="title" role="img">
               <g class="bar">
-                <rect width="${5*passPercent}em" height="1em" class="pass"></rect>
-                <rect width="${5 - (5*passPercent)}em" height="1em" class="fail" x="${5*passPercent}em"></rect>
+                <rect width="${4*passPercent}em" height="1em" class="pass"></rect>
+                <rect width="${4 - (4*passPercent)}em" height="1em" class="fail" x="${4*passPercent}em"></rect>
               </g>
             </svg>
           </td>
@@ -208,8 +234,8 @@
               ${specIssues[specIssues.length-1]}
               ${
                 specIssues[specIssues.length-1] > specIssues[specIssues.length-2] ?
-                    '<span class="up">&#x2197;</span>' :
-                    '<span class="down">&#x2198;</span>'
+                    '<span class="bad-direction">&#x2197;</span>' :
+                    '<span class="good-direction">&#x2198;</span>'
               }
             </a>
           </td>
@@ -218,8 +244,8 @@
               ${crbugs[crbugs.length-1]}
               ${
                 crbugs[crbugs.length-1] > crbugs[crbugs.length-2] ?
-                    '<span class="up">&#x2197;</span>' :
-                    '<span class="down">&#x2198;</span>'
+                    '<span class="bad-direction">&#x2197;</span>' :
+                    '<span class="good-direction">&#x2198;</span>'
               }
             </a>
           </td>
