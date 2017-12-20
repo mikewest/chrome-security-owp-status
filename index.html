@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chrome Security OWP Status</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #222;
+    }
+    header {
+      background: #000 no-repeat left/auto 90% url('./chrome.png');
+      border-bottom: 1px solid #444;
+      margin-bottom: 1em;
+    }
+      h1 {
+        color: #FFF;
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 700;
+        padding: 0.75em 0 0.75em 2.75em;
+        font-size: 1.5em;
+        margin: 0;
+      }
+
+    /* FEATURE TABLE */
+    table {
+      text-align: center;
+      vertical-align: middle;
+      border-spacing: 10px;
+    }
+
+    th, td {
+      text-transform: uppercase;
+      font: 700 1.2em/1.2 'Open Sans Condensed', sans-serif;
+      color: #999;
+    }
+      td a {
+        text-decoration: none;
+        color: #FFF;
+      }
+    th:first-child, td {
+      text-align: right;
+    }
+
+    /* - Table Body */
+    tbody td, tbody th {
+      padding: 0.5em 1em;
+    }
+    tbody th {
+      color: #FFF;
+    }
+    tbody td {
+      background: #333;
+      border-radius: 5px;
+    }
+      .up {
+        color: #00AA00;
+      }
+      .down {
+        color: #FF0000;
+      }
+    tbody svg, tbody object {
+      width: 5em;
+      height: 1em;
+      margin-left: 0.5em;
+    }
+      .pass {
+        fill: #00AA00;
+        border-right: 1px solid #444;
+      }
+      .fail {
+        fill: #666;
+      }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Chrome Security OWP Status</h1>
+  </header>
+  <section>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>WPT</th>
+          <th>Spec Bugs</th>
+          <th>Chromium Bugs</th>
+        </tr>
+      </thead>
+<!--
+      <tbody>
+        <tr>
+          <th>Cookies</th>
+          <td>
+            <a href="https://wpt.fyi/cookies">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="chart" width="420" height="150" aria-labelledby="title" role="img">
+              <g class="bar">
+                <rect width="3.8em" height="1em" class="pass"></rect>
+                <rect width="1.2em" height="1em" class="fail" x="3.8em"></rect>
+              </g>
+            </svg>
+            </a>
+          <td>
+            <a href="https://github.com/w3c/webappsec-clear-site-data/issues/">14</a>
+            <object data="https://sparksvg.me/line.svg?6,4,2,7,8,10,14,14,16,9,7,3,3,6,4,2,7,8,10,14,24,16,9,7,3,7&current&rgba:255,255,255,1"
+                    type="image/svg+xml">
+            </object>
+          </td>
+          <td>
+            <a href="">2</a>
+            <object data="https://sparksvg.me/line.svg?6,4,2,7,8,10,14,14,16,9,7,3,3,6,4,2,7,8,10,14,24,16,9,7,3,7&current&rgba:255,255,255,1"
+                    type="image/svg+xml">
+            </object>
+          </td>
+        </tr>
+      </tbody>
+-->
+    </table>
+  </section>
+
+  <script>
+    function getFakeData() {
+      let passPercent = Math.random();
+      let specIssues = new Uint8Array(15);
+      window.crypto.getRandomValues(specIssues);
+      let crbugs = new Uint8Array(15);
+      window.crypto.getRandomValues(crbugs);
+      return [passPercent, specIssues, crbugs];
+    }
+
+    // Make pretty pictures!
+    function scale(max, min, num) {return (100 * (num - min) / (max - min)) || 0;}
+
+    function addGraph(el, data) {
+      // Adapted from https://github.com/tgvashworth/sparksvg
+      let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("version", "1.1");
+      svg.setAttribute("baseProfile", "full");
+      svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      svg.setAttributeNS("xmlns", "xlink", "http://www.w3.org/1999/xlink");
+      svg.setAttributeNS("xmlns", "ev", "http://www.w3.org/2001/xml-events");
+
+      color = "rgba(255,255,255,0.8)",
+      max = Math.max.apply(null, data),
+      min = Math.min.apply(null, data);
+
+      var parts = data.map(function (num) { return scale(max, min, num); }),
+          x, y, height,
+          width = 100 / parts.length;
+      for (var i=0; i < parts.length; i++) {
+        var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        x = 100 * (i / parts.length);
+        y = 100 - parts[i];
+        height = parts[i] + 1;
+        rect.setAttribute("title", data[i]);
+        rect.setAttribute("x", x + "%");
+        rect.setAttribute("y", y + "%");
+        rect.setAttribute("width", width + "%");
+        rect.setAttribute("height", height + "%");
+        rect.setAttribute("fill", color);
+        svg.appendChild(rect);
+      }
+
+      el.appendChild(svg);
+    }
+
+    let names = [
+      "Clear-Site-Data", "Content-Security-Policy", "Cookies", "Credential Management",
+      "Feature Policy", "Mixed Content", "Referrer Policy", "Secure Contexts",
+      "Subresource Integrity", "Upgrade-Insecure-Requests", "X-Frame-Options"
+    ];
+
+    let table = document.querySelector('table');
+    let tbody = document.createElement('tbody');
+    for (let name in names) {
+      let tr = document.createElement('tr');
+
+      let passPercent, specIssues, crbugs;
+      [passPercent, specIssues, crbugs] = getFakeData();
+    
+      // This should probably use a `<template>`. 
+      tr.innerHTML = `
+          <th>${names[name]}</th>
+          <td>
+            <a href="https://wpt.fyi/">
+              ${Math.floor(passPercent * 100)}%
+              ${
+                Math.round(Math.random()) ?
+                    '<span class="up">&#x2197;</span>' :
+                    '<span class="down">&#x2198;</span>'
+              }
+            </a>
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="chart" width="420" height="150" aria-labelledby="title" role="img">
+              <g class="bar">
+                <rect width="${5*passPercent}em" height="1em" class="pass"></rect>
+                <rect width="${5 - (5*passPercent)}em" height="1em" class="fail" x="${5*passPercent}em"></rect>
+              </g>
+            </svg>
+          </td>
+          <td>
+            <a href="https://github.com/w3c/">
+              ${specIssues[specIssues.length-1]}
+              ${
+                specIssues[specIssues.length-1] > specIssues[specIssues.length-2] ?
+                    '<span class="up">&#x2197;</span>' :
+                    '<span class="down">&#x2198;</span>'
+              }
+            </a>
+          </td>
+          <td>
+            <a href="">
+              ${crbugs[crbugs.length-1]}
+              ${
+                crbugs[crbugs.length-1] > crbugs[crbugs.length-2] ?
+                    '<span class="up">&#x2197;</span>' :
+                    '<span class="down">&#x2198;</span>'
+              }
+            </a>
+          </td>
+      `;
+
+      let tds = tr.querySelectorAll('td');
+      addGraph(tds[1], specIssues);
+      addGraph(tds[2], crbugs);
+
+      tbody.appendChild(tr);
+    }
+
+    table.appendChild(tbody);
+  </script>
+</body>
+</html>
