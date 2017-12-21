@@ -151,6 +151,8 @@
   </section>
 
   <script>
+    document.querySelector('h1').innerText = `${window.innerWidth} x ${window.innerHeight}`;
+
     function getFakeData() {
       let passPercent = Math.random();
       let specIssues = new Uint8Array(15);
@@ -259,6 +261,8 @@
     }
 
     table.appendChild(tbody);
+
+    setTimeout(_ => { window.location.reload(); }, 15000);
   </script>
 </body>
 </html>
