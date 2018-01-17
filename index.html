@@ -222,7 +222,7 @@
 
     let table = document.querySelector('table');
     let tbody = document.createElement('tbody');
-    for (let name in names) {
+    names.forEach(name => {
       let tr = document.createElement('tr');
 
       let passPercent, specIssues, crbugs;
@@ -230,15 +230,10 @@
     
       // This should probably use a `<template>`. 
       tr.innerHTML = `
-          <th>${names[name]}</th>
+          <th>${name}</th>
           <td>
             <a href="https://wpt.fyi/">
               ${Math.floor(passPercent * 100)}%
-              ${
-                Math.round(Math.random()) ?
-                    '<span class="good-direction">&#x2197;</span>' :
-                    '<span class="bad-direction">&#x2198;</span>'
-              }
             </a>
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="chart" width="420" height="140" aria-labelledby="title" role="img">
               <g class="bar">
@@ -274,7 +269,7 @@
       addGraph(tds[2], crbugs);
 
       tbody.appendChild(tr);
-    }
+    });
 
     table.appendChild(tbody);
 
