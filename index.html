@@ -146,15 +146,31 @@
 
     <div>
       <h2>Intent Triage</h2>
-      <p>estark@</p>
+      <p>andypaicu@</p>
     </div>
   </section>
 
   <script>
     document.querySelector('h1').innerText = `${window.innerWidth} x ${window.innerHeight}`;
 
-    function getFakeData() {
-      let passPercent = Math.random();
+    function getFakeData(name) {
+      // Data as of 2018-01-17:
+      const passPercentages = {
+        "Clear-Site-Data": 1,
+        "Content-Security-Policy": 1141/1186,
+        "Cookies": 34/35,
+        "Credential Management": 56/68,
+        "Feature Policy": 28/44,
+        "Mixed Content": 452/458,
+        "Referrer Policy": 2681/2682,
+        "Secure Contexts": 55/70,
+        "Subresource Integrity": 63/72,
+        "Upgrade-Insecure-Requests": 56/89,
+        "X-Frame-Options": 1,
+      };
+
+      let passPercent = passPercentages[name];
+
       let specIssues = new Uint8Array(15);
       window.crypto.getRandomValues(specIssues);
       let crbugs = new Uint8Array(15);
@@ -210,7 +226,7 @@
       let tr = document.createElement('tr');
 
       let passPercent, specIssues, crbugs;
-      [passPercent, specIssues, crbugs] = getFakeData();
+      [passPercent, specIssues, crbugs] = getFakeData(name);
     
       // This should probably use a `<template>`. 
       tr.innerHTML = `
