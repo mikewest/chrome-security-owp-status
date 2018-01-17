@@ -168,13 +168,43 @@
         "Upgrade-Insecure-Requests": 56/89,
         "X-Frame-Options": 1,
       };
+      const specIssueData = {
+        "Clear-Site-Data": 13,
+        "Content-Security-Policy": 81,
+        "Cookies": 7,
+        "Credential Management": 51,
+        "Feature Policy": 31,
+        "Mixed Content": 2,
+        "Referrer Policy": 6,
+        "Secure Contexts": 1, 
+        "Subresource Integrity": 22,
+        "Upgrade-Insecure-Requests": 5,
+        "X-Frame-Options": 0
+      };
+      const crbugData = {
+        "Clear-Site-Data": 5,
+        "Content-Security-Policy": 70,
+        "Cookies": 165,
+        "Credential Management": 7,
+        "Feature Policy": 27,
+        "Mixed Content": 36,
+        "Referrer Policy": 2,
+        "Secure Contexts": 3,
+        "Subresource Integrity": 7,
+        "Upgrade-Insecure-Requests": 14,
+        "X-Frame-Options": 10
+      };
 
       let passPercent = passPercentages[name];
 
       let specIssues = new Uint8Array(15);
       window.crypto.getRandomValues(specIssues);
+      specIssues[specIssues.length - 1] = specIssueData[name];
+
       let crbugs = new Uint8Array(15);
       window.crypto.getRandomValues(crbugs);
+      crbugs[crbugs.length - 1] = crbugData[name];
+
       return [passPercent, specIssues, crbugs];
     }
 
@@ -245,21 +275,25 @@
           <td>
             <a href="https://github.com/w3c/">
               ${specIssues[specIssues.length-1]}
+              <!--
               ${
                 specIssues[specIssues.length-1] > specIssues[specIssues.length-2] ?
                     '<span class="bad-direction">&#x2197;</span>' :
                     '<span class="good-direction">&#x2198;</span>'
               }
+              -->
             </a>
           </td>
           <td>
             <a href="">
               ${crbugs[crbugs.length-1]}
+              <!--
               ${
                 crbugs[crbugs.length-1] > crbugs[crbugs.length-2] ?
                     '<span class="bad-direction">&#x2197;</span>' :
                     '<span class="good-direction">&#x2198;</span>'
               }
+              -->
             </a>
           </td>
       `;
